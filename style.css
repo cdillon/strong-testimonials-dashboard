@@ -1,0 +1,12 @@
+/* to make one full-width widget area by removing sidebar: */
+/*
+#wpbody-content #dashboard-widgets .postbox-container {
+	width: auto;
+	float: none;
+}
+*/
+
+div[id^="strongdashboard_"] .inside div pre {
+	white-space: pre-wrap;
+	/*word-wrap: break-word;*/
+}
