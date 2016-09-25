@@ -4,7 +4,7 @@
  * Plugin URI: http://www.wpmission.com
  * Description: Add-on for the Strong Testimonials plugin.
  * Author: Chris Dillon
- * Version 0.5.2
+ * Version: 0.5.3
  * Author URI: http://wpmission.com
  * Text Domain: strong-testimonials-dashboard
  * Requires: 3.5 or higher

@@ -15,5 +15,11 @@ An add-on for the Strong Testimonials plugin.
 
 == Changelog ==
 
+= 0.5.3 =
+* Version bump to test WP Pusher.
+
+= 0.5.2 =
+* Add readme.
+
 = 0.5.1 =
-* First release development version.
+* First development version.
