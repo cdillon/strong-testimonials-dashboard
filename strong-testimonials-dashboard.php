@@ -1,7 +1,29 @@
 <?php
 /**
  * Plugin Name: Strong Testimonials Dashboard
+ * Plugin URI: http://www.wpmission.com
+ * Description: Add-on for the Strong Testimonials plugin.
+ * Author: Chris Dillon
  * Version 0.5.2
+ * Author URI: http://wpmission.com
+ * Text Domain: strong-testimonials-dashboard
+ * Requires: 3.5 or higher
+ * License: GPLv3 or later
+ *
+ * Copyright 2016  Chris Dillon  chris@wpmission.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 2, as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
 // Exit if accessed directly
