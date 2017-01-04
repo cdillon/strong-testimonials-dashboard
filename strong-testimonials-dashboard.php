@@ -4,7 +4,7 @@
  * Plugin URI: http://www.wpmission.com
  * Description: Add-on for the Strong Testimonials plugin.
  * Author: Chris Dillon
- * Version: 0.6
+ * Version: 0.7
  * Author URI: http://wpmission.com
  * Text Domain: strong-testimonials-dashboard
  * Requires: 3.5 or higher
@@ -65,7 +65,7 @@ class Strong_Testimonials_Dashboard {
 	function printer( $option ) {
 		echo '<div>';
 		if ( class_exists( 'Kint' ) ) {
-			echo d( $option );
+			echo Kint::dump( $option );
 		}
 		else {
 			echo '<pre>' . print_r( $option, true ) . '</pre>';
@@ -92,6 +92,18 @@ class Strong_Testimonials_Dashboard {
 		// -----------------------
 		// primary location [core]
 		// -----------------------
+
+		wp_add_dashboard_widget(
+			'strongdashboard_wpmtst_11',
+			'Strong Testimonials &bull; Add-ons',
+			array( $this, 'wpmtst_option_11_function' )
+		);
+
+		wp_add_dashboard_widget(
+			'strongdashboard_wpmtst_12',
+			'Strong Testimonials &bull; Licenses',
+			array( $this, 'wpmtst_option_12_function' )
+		);
 
 		wp_add_dashboard_widget(
 			'strongdashboard_wpmtst_9',
@@ -270,6 +282,26 @@ class Strong_Testimonials_Dashboard {
 		$custom_forms = get_option( 'wpmtst_custom_forms' );
 		if ( $custom_forms ) {
 			$this->printer( $custom_forms );
+		}
+		else {
+			echo '<em>not found</em>';
+		}
+	}
+
+	function wpmtst_option_11_function() {
+		$addons = get_option( 'wpmtst_addons' );
+		if ( $addons ) {
+			$this->printer( $addons );
+		}
+		else {
+			echo '<em>not found</em>';
+		}
+	}
+
+	function wpmtst_option_12_function() {
+		$licenses = get_option( 'wpmtst_licenses' );
+		if ( $licenses ) {
+			$this->printer( $licenses );
 		}
 		else {
 			echo '<em>not found</em>';
