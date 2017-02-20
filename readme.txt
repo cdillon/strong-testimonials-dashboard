@@ -1,25 +1,19 @@
-=== Strong Testimonials Dashboard ===
+=== Strong Testimonials - Dashboard ===
 Contributors: cdillon27
 Tags: testimonials, dashboard
 Requires at least: 3.5
-Tested up to: 4.6.1
-Stable tag: trunk
+Tested up to: 4.7.2
+Stable tag: 0.8
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-An add-on for the Strong Testimonials plugin.
+Dashboard widgets for Strong Testimonials.
 
 == Description ==
 
-An add-on for the Strong Testimonials plugin.
+Dashboard widgets for Strong Testimonials.
 
 == Changelog ==
 
-= 0.5.3 =
-* Version bump to test WP Pusher.
-
-= 0.5.2 =
-* Add readme.
-
-= 0.5.1 =
-* First development version.
+= 0.8 =
+* Add widget for add-ons.

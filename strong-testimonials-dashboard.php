@@ -1,16 +1,16 @@
 <?php
 /**
- * Plugin Name: Strong Testimonials Dashboard
+ * Plugin Name: Strong Testimonials - Dashboard
  * Plugin URI: http://www.wpmission.com
  * Description: Add-on for the Strong Testimonials plugin.
  * Author: Chris Dillon
- * Version: 0.7
+ * Version: 0.8
  * Author URI: http://wpmission.com
  * Text Domain: strong-testimonials-dashboard
  * Requires: 3.5 or higher
  * License: GPLv3 or later
  *
- * Copyright 2016  Chris Dillon  chris@wpmission.com
+ * Copyright 2016-2017  Chris Dillon  chris@wpmission.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2, as
@@ -42,19 +42,19 @@ class Strong_Testimonials_Dashboard {
 	}
 
 	/**
-	* Some style
-	*/
+	 * Some style
+	 */
 	function add_style() {
-	   if ( class_exists( 'Kint' ) ) {
-		   ?>
-		   <style>div[id^="strongdashboard_"] .kint footer { font-size: inherit; }</style>
-		   <?php
-	   }
-	   else {
-		   ?>
-		   <style>div[id^="strongdashboard_"] div pre { white-space: pre-wrap; }</style>
-		   <?php
-	   }
+		if ( class_exists( 'Kint' ) ) {
+			?>
+            <style>div[id^="strongdashboard_"] .kint footer { font-size: inherit; }</style>
+			<?php
+		}
+		else {
+			?>
+            <style>div[id^="strongdashboard_"] div pre { white-space: pre-wrap; }</style>
+			<?php
+		}
 	}
 
 	/**
@@ -97,12 +97,6 @@ class Strong_Testimonials_Dashboard {
 			'strongdashboard_wpmtst_11',
 			'Strong Testimonials &bull; Add-ons',
 			array( $this, 'wpmtst_option_11_function' )
-		);
-
-		wp_add_dashboard_widget(
-			'strongdashboard_wpmtst_12',
-			'Strong Testimonials &bull; Licenses',
-			array( $this, 'wpmtst_option_12_function' )
 		);
 
 		wp_add_dashboard_widget(
@@ -292,16 +286,6 @@ class Strong_Testimonials_Dashboard {
 		$addons = get_option( 'wpmtst_addons' );
 		if ( $addons ) {
 			$this->printer( $addons );
-		}
-		else {
-			echo '<em>not found</em>';
-		}
-	}
-
-	function wpmtst_option_12_function() {
-		$licenses = get_option( 'wpmtst_licenses' );
-		if ( $licenses ) {
-			$this->printer( $licenses );
 		}
 		else {
 			echo '<em>not found</em>';
