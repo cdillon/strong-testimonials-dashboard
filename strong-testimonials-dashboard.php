@@ -1,16 +1,16 @@
 <?php
 /**
  * Plugin Name: Strong Testimonials - Dashboard
- * Plugin URI: http://www.wpmission.com
+ * Plugin URI: https://strongplugins.com
  * Description: Add-on for the Strong Testimonials plugin.
  * Author: Chris Dillon
- * Version: 0.8
- * Author URI: http://wpmission.com
+ * Version: 0.9
+ * Author URI: https://strongplugins.com
  * Text Domain: strong-testimonials-dashboard
  * Requires: 3.5 or higher
  * License: GPLv3 or later
  *
- * Copyright 2016-2017  Chris Dillon  chris@wpmission.com
+ * Copyright 2016-2017  Chris Dillon  chris@strongplugins.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2, as
@@ -29,32 +29,27 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+
 class Strong_Testimonials_Dashboard {
 
+	public $not_found = '<em>not found</em>';
+
 	public function __construct() {
-
 		add_action( 'admin_head-index.php', array( $this, 'add_style' ) );
-
-		//add_filter('screen_layout_columns', array( $this, 'screen_layout_columns' ) );
-
-		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ), 20 );
-
+		add_action( 'wp_dashboard_setup', array( $this, 'add_info_widgets' ), 20 );
+		add_action( 'wp_dashboard_setup', array( $this, 'add_view_widgets' ), 20 );
 	}
 
 	/**
 	 * Some style
 	 */
 	function add_style() {
-		if ( class_exists( 'Kint' ) ) {
-			?>
-            <style>div[id^="strongdashboard_"] .kint footer { font-size: inherit; }</style>
-			<?php
-		}
-		else {
-			?>
-            <style>div[id^="strongdashboard_"] div pre { white-space: pre-wrap; }</style>
-			<?php
-		}
+        ?>
+        <style>
+            div[id^="strongdashboard_"] .kint footer { display: none; }
+            div[id^="strongdashboard_"] pre { white-space: pre-wrap; }
+        </style>
+        <?php
 	}
 
 	/**
@@ -62,233 +57,195 @@ class Strong_Testimonials_Dashboard {
 	 *
 	 * @param $option
 	 */
-	function printer( $option ) {
+	function printer( $option, $force_plain = false ) {
 		echo '<div>';
-		if ( class_exists( 'Kint' ) ) {
-			echo Kint::dump( $option );
-		}
-		else {
+		if ( class_exists( 'Kint' ) && ! $force_plain ) {
+			echo !Kint::dump( $option );
+		} else {
+			ob_start();
 			echo '<pre>' . print_r( $option, true ) . '</pre>';
+			$output = ob_get_clean();
+			$output = str_replace( '    ', '  ', $output );
+			$output = $this->trim_path( $output );
+			echo $output;
 		}
 		echo '</div>';
 	}
 
 	/**
-	 * Force one-column dashboard
-	 */
-	function screen_layout_columns( $columns ) {
-		$columns['dashboard'] = 1;
-
-		return $columns;
-	}
-
-	/**
 	 * Add dashboard widgets.
 	 */
-	function add_dashboard_widgets() {
+	function add_info_widgets() {
 		if ( ! current_user_can( 'manage_options' ) )
 			return;
 
-		// -----------------------
-		// primary location [core]
-		// -----------------------
-
-		wp_add_dashboard_widget(
-			'strongdashboard_wpmtst_11',
-			'Strong Testimonials &bull; Add-ons',
-			array( $this, 'wpmtst_option_11_function' )
+		$widgets = array(
+			'the_versions'     => 'Plugin/Add-on Versions',
+			'the_options'      => 'Options',
+			'the_history'      => 'History',
+			'the_fields'       => 'Fields',
+			'the_form_options' => 'Form Options',
+			'the_view_options' => 'View Options',
+			'the_default_view' => 'Default View',
+			'the_templates'    => 'Templates',
+			'the_base_forms'   => 'Base Forms',
+			'the_custom_forms' => 'Custom Forms',
 		);
 
-		wp_add_dashboard_widget(
-			'strongdashboard_wpmtst_9',
-			'Strong Testimonials &bull; Base Forms',
-			array( $this, 'wpmtst_option_9_function' )
-		);
+		foreach ( $widgets as $callback => $title ) {
+			if ( method_exists( $this, $callback ) ) {
+				wp_add_dashboard_widget(
+					"strongdashboard_$callback",
+					"Strong Testimonials &bull; $title",
+					array( $this, $callback )
+				);
+			}
+		}
+	}
 
-		wp_add_dashboard_widget(
-			'strongdashboard_wpmtst_10',
-			'Strong Testimonials &bull; Custom Forms',
-			array( $this, 'wpmtst_option_10_function' )
-		);
+	function add_view_widgets() {
+		if ( function_exists( 'wpmtst_get_views' ) ) {
+			$views = wpmtst_get_views();
+			foreach ( $views as $key => $view ) {
+				wp_add_dashboard_widget(
+					"strongdashboard_view_{$view['id']}",
+					"Strong Testimonials &bull; View {$view['id']}: {$view['name']}",
+					array( $this, 'a_view' ),
+					null,
+					array( 'view' => $view )
+				);
 
-		wp_add_dashboard_widget(
-			'strongdashboard_wpmtst_5',
-			'Strong Testimonials &bull; Views',
-			array( $this, 'wpmtst_option_5_function' )
-		);
+			}
+		}
+	}
 
-		wp_add_dashboard_widget(
-			'strongdashboard_wpmtst_8',
-			'Strong Testimonials &bull; Templates',
-			array( $this, 'wpmtst_option_8_function' )
-		);
+	function trim_path( $output ) {
+		$plugin_path = str_replace( '/', '\\', wp_normalize_path( plugin_dir_path( __DIR__ ) ) );
+		$output      = str_replace( $plugin_path, '...\\', $output );
 
-		wp_add_dashboard_widget(
-			'strongdashboard_wpmtst_2',
-			'Strong Testimonials &bull; Fields',
-			array( $this, 'wpmtst_option_2_function' )
-		);
+		$plugin_url  = plugin_dir_url( __DIR__ );
+		$output      = str_replace( $plugin_url, '.../', $output );
 
-		wp_add_dashboard_widget(
-			'strongdashboard_wpmtst_7',
-			'Strong Testimonials &bull; Default View',
-			array( $this, 'wpmtst_option_7_function' )
-		);
-
-		wp_add_dashboard_widget(
-			'strongdashboard_wpmtst_6',
-			'Strong Testimonials &bull; View Options',
-			array( $this, 'wpmtst_option_6_function' )
-		);
-
-		wp_add_dashboard_widget(
-			'strongdashboard_wpmtst_4',
-			'Strong Testimonials &bull; Form Options',
-			array( $this, 'wpmtst_option_4_function' )
-		);
-
-		wp_add_dashboard_widget(
-			'strongdashboard_wpmtst_1',
-			'Strong Testimonials &bull; Options',
-			array( $this, 'wpmtst_option_1_function' )
-		);
-
-		//wp_add_dashboard_widget(
-		//	'strongdashboard_icpo_1',
-		//	'ICPO Options',
-		//	array( $this, 'icpo_1_function' )
-		//);
-		//
-		//wp_add_dashboard_widget(
-		//	'strongdashboard_scpo_1',
-		//	'SCPO Options',
-		//	array( $this, 'scpo_1_function' )
-		//);
-		//
-		//wp_add_dashboard_widget(
-		//	'strongdashboard_cpto_1',
-		//	'CPTO Options',
-		//	array( $this, 'cpto_1_function' )
-		//);
-
-		// -------------------------
-		// secondary location [side]
-		// -------------------------
-		//add_meta_box( '', 'Paths', array( $this, 'showdirs_function' ), 'dashboard', 'side', 'high' );
-
+		return $output;
 	}
 
 	/**
-	 * ------------------------------
-	 * WIDGETS
-	 * ------------------------------
+	 * @param $control_callback
+	 * @param $args
 	 */
+	function a_view( $control_callback, $args ) {
+		$this->printer( unserialize( $args['args']['view']['value'] ) );
+	}
 
-	function wpmtst_option_1_function() {
+	function the_versions() {
+		$plugin_version = get_option( 'wpmtst_plugin_version' );
+		if ( $plugin_version ) {
+			printf( '<p><b>plugin version:</b> %s</p>', $plugin_version );
+		} else {
+			echo $this->not_found;
+		}
+
+		$db_version = get_option( 'wpmtst_db_version' );
+		if ( $db_version ) {
+			printf( '<p><b>database table version:</b> %s</p>', $db_version );
+		} else {
+			echo $this->not_found;
+		}
+
+		$addons = get_option( 'wpmtst_addons' );
+		if ( $addons ) {
+			echo '<p><b>add-ons:</b></p>';
+			ob_start();
+			$this->printer( $addons, true );
+			$output = ob_get_clean();
+			$output = $this->trim_path( $output );
+			echo $output;
+		} else {
+			echo $this->not_found;
+		}
+	}
+
+	function the_options() {
 		$options = get_option( 'wpmtst_options' );
 		if ( $options ) {
 			$this->printer( $options );
-		}
-		else {
-			echo '<em>not found</em>';
+		} else {
+			echo $this->not_found;
 		}
 	}
 
-	function wpmtst_option_2_function() {
+	function the_history() {
+		$history = get_option( 'wpmtst_history' );
+		if ( $history ) {
+			$this->printer( $history );
+		} else {
+			echo $this->not_found;
+		}
+	}
+
+	function the_fields() {
 		$fields = get_option( 'wpmtst_fields' );
 		if ( $fields ) {
 			$this->printer( $fields );
-		}
-		else {
-			echo '<em>not found</em>';
+		} else {
+			echo $this->not_found;
 		}
 	}
 
-	function wpmtst_option_4_function() {
+	function the_form_options() {
 		$form_options = get_option( 'wpmtst_form_options' );
 		if ( $form_options ) {
 			$this->printer( $form_options );
-		}
-		else {
-			echo '<em>not found</em>';
-		}
-	}
-
-	function wpmtst_option_5_function() {
-		if ( function_exists( 'wpmtst_get_views' ) ) {
-			$views = wpmtst_get_views();
-			echo '<div>';
-			foreach ( $views as $key => $view ) {
-				echo '<p style="font-size: 1.5em; margin-bottom: 0.5em; padding-top: 0.5em;">' . $view['id'] . ' - ' . $view['name'] . '</p>';
-				$this->printer( unserialize( $view['value'] ) );
-			}
-			echo '</div>';
-		}
-		else {
-			echo '<em>not found</em>';
+		} else {
+			echo $this->not_found;
 		}
 	}
 
-	function wpmtst_option_6_function() {
+	function the_view_options() {
 		$view_options = get_option( 'wpmtst_view_options' );
 		if ( $view_options ) {
 			$this->printer( $view_options );
-		}
-		else {
-			echo '<em>not found</em>';
+		} else {
+			echo $this->not_found;
 		}
 	}
 
-	function wpmtst_option_7_function() {
+	function the_default_view() {
 		$view_default = get_option( 'wpmtst_view_default' );
 		if ( $view_default ) {
 			$this->printer( $view_default );
-		}
-		else {
-			echo '<em>not found</em>';
+		} else {
+			echo $this->not_found;
 		}
 	}
 
-	function wpmtst_option_8_function() {
+	function the_templates() {
 		if ( ! class_exists( 'Strong_Templates' ) ) {
-			echo '<em>not found</em>';
-
+			echo $this->not_found;
 			return;
 		}
 
 		$strong_templates = new Strong_Templates();
 		$templates        = $strong_templates->get_templates();
 
-		$this->printer( $templates );
+		$this->printer( $templates, true );
 	}
 
-	function wpmtst_option_9_function() {
+	function the_base_forms() {
 		$base_forms = get_option( 'wpmtst_base_forms' );
 		if ( $base_forms ) {
 			$this->printer( $base_forms );
-		}
-		else {
-			echo '<em>not found</em>';
+		} else {
+			echo $this->not_found;
 		}
 	}
 
-	function wpmtst_option_10_function() {
+	function the_custom_forms() {
 		$custom_forms = get_option( 'wpmtst_custom_forms' );
 		if ( $custom_forms ) {
 			$this->printer( $custom_forms );
-		}
-		else {
-			echo '<em>not found</em>';
-		}
-	}
-
-	function wpmtst_option_11_function() {
-		$addons = get_option( 'wpmtst_addons' );
-		if ( $addons ) {
-			$this->printer( $addons );
-		}
-		else {
-			echo '<em>not found</em>';
+		} else {
+			echo $this->not_found;
 		}
 	}
 
