@@ -4,7 +4,7 @@
  * Plugin URI: https://strongplugins.com
  * Description: Add-on for the Strong Testimonials plugin.
  * Author: Chris Dillon
- * Version: 0.9
+ * Version: 0.9.1
  * Author URI: https://strongplugins.com
  * Text Domain: strong-testimonials-dashboard
  * Requires: 3.5 or higher
@@ -90,6 +90,7 @@ class Strong_Testimonials_Dashboard {
 			'the_templates'    => 'Templates',
 			'the_base_forms'   => 'Base Forms',
 			'the_custom_forms' => 'Custom Forms',
+            'the_properties'   => 'Properties',
 		);
 
 		foreach ( $widgets as $callback => $title ) {
@@ -244,6 +245,15 @@ class Strong_Testimonials_Dashboard {
 		$custom_forms = get_option( 'wpmtst_custom_forms' );
 		if ( $custom_forms ) {
 			$this->printer( $custom_forms );
+		} else {
+			echo $this->not_found;
+		}
+	}
+
+	function the_properties() {
+		$properties = get_option( 'wpmtst_properties' );
+		if ( $properties ) {
+			$this->printer( $properties );
 		} else {
 			echo $this->not_found;
 		}
