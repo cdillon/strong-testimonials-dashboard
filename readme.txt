@@ -1,9 +1,9 @@
-=== Strong Testimonials - Dashboard ===
+=== Strong Testimonials Dashboard ===
 Contributors: cdillon27
 Tags: testimonials, dashboard
 Requires at least: 3.5
-Tested up to: 4.7.2
-Stable tag: 0.8
+Tested up to: 4.8.1
+Stable tag: 0.9.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -14,6 +14,3 @@ Dashboard widgets for Strong Testimonials.
 Dashboard widgets for Strong Testimonials.
 
 == Changelog ==
-
-= 0.8 =
-* Add widget for add-ons.

@@ -4,7 +4,7 @@
  * Plugin URI: https://strongplugins.com
  * Description: Add-on for the Strong Testimonials plugin.
  * Author: Chris Dillon
- * Version: 0.9.1
+ * Version: 0.9.2
  * Author URI: https://strongplugins.com
  * Text Domain: strong-testimonials-dashboard
  * Requires: 3.5 or higher
@@ -37,7 +37,7 @@ class Strong_Testimonials_Dashboard {
 	public function __construct() {
 		add_action( 'admin_head-index.php', array( $this, 'add_style' ) );
 		add_action( 'wp_dashboard_setup', array( $this, 'add_info_widgets' ), 20 );
-		add_action( 'wp_dashboard_setup', array( $this, 'add_view_widgets' ), 20 );
+		add_action( 'wp_dashboard_setup', array( $this, 'add_view_widgets' ), 30 );
 	}
 
 	/**
@@ -48,6 +48,7 @@ class Strong_Testimonials_Dashboard {
         <style>
             div[id^="strongdashboard_"] .kint footer { display: none; }
             div[id^="strongdashboard_"] pre { white-space: pre-wrap; }
+            /*.metabox-prefs label:nth-child(odd) { color: blue; }*/
         </style>
         <?php
 	}
@@ -60,7 +61,7 @@ class Strong_Testimonials_Dashboard {
 	function printer( $option, $force_plain = false ) {
 		echo '<div>';
 		if ( class_exists( 'Kint' ) && ! $force_plain ) {
-			echo !Kint::dump( $option );
+			echo Kint::dump( $option );
 		} else {
 			ob_start();
 			echo '<pre>' . print_r( $option, true ) . '</pre>';
@@ -110,7 +111,8 @@ class Strong_Testimonials_Dashboard {
 			foreach ( $views as $key => $view ) {
 				wp_add_dashboard_widget(
 					"strongdashboard_view_{$view['id']}",
-					"Strong Testimonials &bull; View {$view['id']}: {$view['name']}",
+					//"View {$view['id']}: {$view['name']}",
+					"View {$view['id']}",
 					array( $this, 'a_view' ),
 					null,
 					array( 'view' => $view )
