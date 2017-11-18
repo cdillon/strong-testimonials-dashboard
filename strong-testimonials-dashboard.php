@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name: Strong Testimonials - Dashboard
+ * Plugin Name: Strong Testimonials Dashboard
  * Plugin URI: https://strongplugins.com
  * Description: Add-on for the Strong Testimonials plugin.
  * Author: Chris Dillon
- * Version: 0.9.2
+ * Version: 0.10.2
  * Author URI: https://strongplugins.com
  * Text Domain: strong-testimonials-dashboard
  * Requires: 3.5 or higher
@@ -57,6 +57,7 @@ class Strong_Testimonials_Dashboard {
 	 * Our array printer
 	 *
 	 * @param $option
+	 * @param bool $force_plain
 	 */
 	function printer( $option, $force_plain = false ) {
 		echo '<div>';
@@ -81,17 +82,18 @@ class Strong_Testimonials_Dashboard {
 			return;
 
 		$widgets = array(
-			'the_versions'     => 'Plugin/Add-on Versions',
-			'the_options'      => 'Options',
-			'the_history'      => 'History',
-			'the_fields'       => 'Fields',
-			'the_form_options' => 'Form Options',
-			'the_view_options' => 'View Options',
-			'the_default_view' => 'Default View',
-			'the_templates'    => 'Templates',
-			'the_base_forms'   => 'Base Forms',
-			'the_custom_forms' => 'Custom Forms',
-            'the_properties'   => 'Properties',
+			'the_versions'       => 'Plugin/Add-on Versions',
+			'the_options'        => 'Options',
+			'the_history'        => 'History',
+			'the_fields'         => 'Fields',
+			'the_form_options'   => 'Form Options',
+			'the_view_options'   => 'View Options',
+			'the_default_view'   => 'Default View',
+			'the_templates'      => 'Templates',
+			'the_base_forms'     => 'Base Forms',
+			'the_custom_forms'   => 'Custom Forms',
+			'the_properties'     => 'Properties',
+			'the_compat_options' => 'Compatibility Options',
 		);
 
 		foreach ( $widgets as $callback => $title ) {
@@ -142,18 +144,10 @@ class Strong_Testimonials_Dashboard {
 
 	function the_versions() {
 		$plugin_version = get_option( 'wpmtst_plugin_version' );
-		if ( $plugin_version ) {
-			printf( '<p><b>plugin version:</b> %s</p>', $plugin_version );
-		} else {
-			echo $this->not_found;
-		}
+		printf( '<p><b>plugin version:</b> %s</p>', $plugin_version ? $plugin_version : $this->not_found );
 
 		$db_version = get_option( 'wpmtst_db_version' );
-		if ( $db_version ) {
-			printf( '<p><b>database table version:</b> %s</p>', $db_version );
-		} else {
-			echo $this->not_found;
-		}
+    printf( '<p><b>database table version:</b> %s</p>', $db_version ? $db_version : $this->not_found );
 
 		$addons = get_option( 'wpmtst_addons' );
 		if ( $addons ) {
@@ -164,7 +158,7 @@ class Strong_Testimonials_Dashboard {
 			$output = $this->trim_path( $output );
 			echo $output;
 		} else {
-			echo $this->not_found;
+		  echo '<p><b>add-ons:</b> ' . $this->not_found . '</p>';
 		}
 	}
 
@@ -187,7 +181,7 @@ class Strong_Testimonials_Dashboard {
 	}
 
 	function the_fields() {
-		$fields = get_option( 'wpmtst_fields' );
+		$fields = apply_filters( 'wpmtst_fields', get_option( 'wpmtst_fields' ) );
 		if ( $fields ) {
 			$this->printer( $fields );
 		} else {
@@ -256,6 +250,15 @@ class Strong_Testimonials_Dashboard {
 		$properties = get_option( 'wpmtst_properties' );
 		if ( $properties ) {
 			$this->printer( $properties );
+		} else {
+			echo $this->not_found;
+		}
+	}
+
+	function the_compat_options() {
+		$options = get_option( 'wpmtst_compat_options' );
+		if ( $options ) {
+			$this->printer( $options );
 		} else {
 			echo $this->not_found;
 		}
