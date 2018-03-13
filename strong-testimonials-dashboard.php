@@ -4,13 +4,13 @@
  * Plugin URI: https://strongplugins.com
  * Description: Add-on for the Strong Testimonials plugin.
  * Author: Chris Dillon
- * Version: 0.10.2
+ * Version: 0.13
  * Author URI: https://strongplugins.com
  * Text Domain: strong-testimonials-dashboard
- * Requires: 3.5 or higher
+ * Requires: 4.0 or higher
  * License: GPLv3 or later
  *
- * Copyright 2016-2017  Chris Dillon  chris@strongplugins.com
+ * Copyright 2016-201b  Chris Dillon  chris@strongwp.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2, as
@@ -82,18 +82,22 @@ class Strong_Testimonials_Dashboard {
 			return;
 
 		$widgets = array(
-			'the_versions'       => 'Plugin/Add-on Versions',
-			'the_options'        => 'Options',
-			'the_history'        => 'History',
-			'the_fields'         => 'Fields',
-			'the_form_options'   => 'Form Options',
-			'the_view_options'   => 'View Options',
-			'the_default_view'   => 'Default View',
-			'the_templates'      => 'Templates',
-			'the_base_forms'     => 'Base Forms',
-			'the_custom_forms'   => 'Custom Forms',
-			'the_properties'     => 'Properties',
-			'the_compat_options' => 'Compatibility Options',
+			'the_versions'        => 'Plugin/Add-on Versions',
+			'the_options'         => 'Options',
+			'the_history'         => 'History',
+			'the_update_log'      => 'Update Log',
+			'the_fields'          => 'Fields',
+			'the_form_options'    => 'Form Options',
+			'the_view_options'    => 'View Options',
+			'the_default_view'    => 'Default View',
+			'the_templates'       => 'Templates',
+			'the_base_forms'      => 'Base Forms',
+			'the_custom_forms'    => 'Custom Forms',
+			'the_properties'      => 'Properties',
+			'the_compat_options'  => 'Compatibility Options',
+			'the_captcha_plugins' => 'Captcha Plugins',
+			'the_review_markup_options' => 'Review Markup Options',
+			'the_aggregate_rating'      => 'Aggregate Rating',
 		);
 
 		foreach ( $widgets as $callback => $title ) {
@@ -147,7 +151,7 @@ class Strong_Testimonials_Dashboard {
 		printf( '<p><b>plugin version:</b> %s</p>', $plugin_version ? $plugin_version : $this->not_found );
 
 		$db_version = get_option( 'wpmtst_db_version' );
-    printf( '<p><b>database table version:</b> %s</p>', $db_version ? $db_version : $this->not_found );
+        printf( '<p><b>database table version:</b> %s</p>', $db_version ? $db_version : $this->not_found );
 
 		$addons = get_option( 'wpmtst_addons' );
 		if ( $addons ) {
@@ -225,7 +229,7 @@ class Strong_Testimonials_Dashboard {
 		$strong_templates = new Strong_Templates();
 		$templates        = $strong_templates->get_templates();
 
-		$this->printer( $templates, true );
+		$this->printer( $templates );
 	}
 
 	function the_base_forms() {
@@ -259,6 +263,42 @@ class Strong_Testimonials_Dashboard {
 		$options = get_option( 'wpmtst_compat_options' );
 		if ( $options ) {
 			$this->printer( $options );
+		} else {
+			echo $this->not_found;
+		}
+	}
+
+	function the_update_log() {
+		$options = get_option( 'wpmtst_update_log' );
+		if ( $options ) {
+			$this->printer( $options );
+		} else {
+			echo $this->not_found;
+		}
+	}
+
+	function the_captcha_plugins() {
+		$options = apply_filters( 'wpmtst_captcha_plugins', get_option( 'wpmtst_captcha_plugins' ) );
+		if ( $options ) {
+			$this->printer( $options );
+		} else {
+			echo $this->not_found;
+		}
+	}
+
+	function the_review_markup_options() {
+		$options = get_option( 'wpmtst_review_markup' );
+		if ( $options ) {
+			$this->printer( $options, true ); // force plain-text
+		} else {
+			echo $this->not_found;
+		}
+	}
+
+	function the_aggregate_rating() {
+		$options = get_option( 'wpmtst_aggregate_rating' );
+		if ( $options ) {
+			$this->printer( $options, true ); // force plain-text
 		} else {
 			echo $this->not_found;
 		}
