@@ -1,9 +1,9 @@
 === Strong Testimonials Dashboard ===
 Contributors: cdillon27
 Tags: testimonials, dashboard
-Requires at least: 3.5
-Tested up to: 4.8.1
-Stable tag: 0.9.2
+Requires at least: 4.0
+Tested up to: 4.9.3
+Stable tag: 0.13
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
