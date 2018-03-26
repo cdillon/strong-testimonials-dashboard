@@ -4,7 +4,7 @@
  * Plugin URI: https://strongplugins.com
  * Description: Add-on for the Strong Testimonials plugin.
  * Author: Chris Dillon
- * Version: 0.13
+ * Version: 0.14
  * Author URI: https://strongplugins.com
  * Text Domain: strong-testimonials-dashboard
  * Requires: 4.0 or higher
@@ -134,22 +134,23 @@ class Strong_Testimonials_Dashboard {
 			return;
 
 		$widgets = array(
-			'the_versions'        => 'Versions',
-			'the_history'         => 'History',
-			'the_update_log'      => 'Update Log',
-			'the_options'         => 'Options',
-			'the_form_options'    => 'Form Options',
-			'the_view_options'    => 'View Options',
-			'the_compat_options'  => 'Compatibility Options',
-			'the_captcha_plugins' => 'Captcha Plugins',
-			'the_default_view'    => 'Default View',
-			'the_fields'          => 'Fields',
-			'the_templates'       => 'Templates',
-			'the_base_forms'      => 'Base Forms',
-			'the_custom_forms'    => 'Custom Forms',
-			'the_properties'      => 'Properties',
+			'the_versions'              => 'Versions',
+			'the_history'               => 'History',
+			'the_update_log'            => 'Update Log',
+			'the_options'               => 'Options',
+			'the_form_options'          => 'Form Options',
+			'the_view_options'          => 'View Options',
+			'the_compat_options'        => 'Compatibility Options',
+			'the_captcha_plugins'       => 'Captcha Plugins',
+			'the_default_view'          => 'Default View',
+			'the_fields'                => 'Fields',
+			'the_templates'             => 'Templates',
+			'the_base_forms'            => 'Base Forms',
+			'the_custom_forms'          => 'Custom Forms',
+			'the_properties'            => 'Properties',
 			'the_review_markup_options' => 'Review Markup Options',
 			'the_aggregate_rating'      => 'Aggregate Rating',
+			'the_assignment'            => 'Assignment',
 		);
 
 		foreach ( $widgets as $callback => $title ) {
@@ -351,6 +352,15 @@ class Strong_Testimonials_Dashboard {
 		$options = get_option( 'wpmtst_aggregate_rating' );
 		if ( $options ) {
 			$this->printer( $options, true ); // force plain-text
+		} else {
+			echo $this->not_found;
+		}
+	}
+
+	function the_assignment() {
+		$options = get_option( 'wpmtst_assignment' );
+		if ( $options ) {
+			$this->printer( $options );
 		} else {
 			echo $this->not_found;
 		}
