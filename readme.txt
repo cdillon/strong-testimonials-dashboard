@@ -2,8 +2,8 @@
 Contributors: cdillon27
 Tags: testimonials, dashboard
 Requires at least: 4.0
-Tested up to: 4.9.4
-Stable tag: 0.14
+Tested up to: 4.9.5
+Stable tag: 0.15
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 

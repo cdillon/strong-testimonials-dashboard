@@ -1,0 +1,32 @@
+div[id^="strongdashboard_"] .kint footer { display: none; }
+div[id^="strongdashboard_"] pre { white-space: pre-wrap; }
+
+#screen-options-wrap {}
+#adv-settings fieldset.metabox-prefs {
+  display: flex;
+  flex-flow: column wrap;
+  max-height: 600px;
+  margin-bottom: 1em;
+  overflow: auto;
+}
+
+.hilite { color: #0073aa; }
+.divider {
+  background: #F0F0F0;
+  padding-left: 10px;
+  margin: 5px 15px 5px 0;
+  font-weight: 600;
+  line-height: 30px;
+}
+
+#wp_divider { order: -10; }
+label[for="dashboard_right_now-hide"] { order: -5; }
+label[for="dashboard_activity-hide"] { order: -5; }
+label[for="dashboard_quick_press-hide"] { order: -5; }
+label[for="dashboard_primary-hide"] { order: -5; }
+label[for="wp_welcome_panel-hide"] { order: -5;}
+
+#strong_testimonials_divider { order: -1; }
+
+/* move LH Dashboard Notes beginning */
+label[for^="lh_dashboard_widgets"] { order: -15;}
