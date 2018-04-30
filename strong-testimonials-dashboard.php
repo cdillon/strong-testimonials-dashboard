@@ -60,7 +60,7 @@ class Strong_Testimonials_Dashboard {
                 overflow: auto;
             }
 
-            .hilite { color: blue; }
+            .hilite { color: #1e8cbe; }
             .divider {
                 background: #F0F0F0;
                 padding-left: 10px;
