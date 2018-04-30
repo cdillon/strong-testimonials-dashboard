@@ -4,7 +4,7 @@
  * Plugin URI: https://strongplugins.com
  * Description: Add-on for the Strong Testimonials plugin.
  * Author: Chris Dillon
- * Version: 0.14
+ * Version: 0.15
  * Author URI: https://strongplugins.com
  * Text Domain: strong-testimonials-dashboard
  * Requires: 4.0 or higher
@@ -35,74 +35,32 @@ class Strong_Testimonials_Dashboard {
 	public $not_found = '<em>not found</em>';
 
 	public function __construct() {
-		add_action( 'admin_head-index.php', array( $this, 'add_style' ) );
-		add_action( 'admin_footer-index.php', array( $this, 'add_script' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'add_style' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'add_script' ) );
 		add_action( 'wp_dashboard_setup', array( $this, 'add_info_widgets' ), 20 );
 		add_action( 'wp_dashboard_setup', array( $this, 'add_view_widgets' ), 30 );
 	}
 
 	/**
 	 * Some style
+     *
+     * @param $hook
 	 */
-	function add_style() {
-        ?>
-        <!--suppress CssUnusedSymbol -->
-        <style>
-            div[id^="strongdashboard_"] .kint footer { display: none; }
-            div[id^="strongdashboard_"] pre { white-space: pre-wrap; }
-
-            #screen-options-wrap {}
-            #adv-settings fieldset.metabox-prefs {
-                display: flex;
-                flex-flow: column wrap;
-                max-height: 600px;
-                margin-bottom: 1em;
-                overflow: auto;
-            }
-
-            .hilite { color: blue; }
-            .divider {
-                background: #F0F0F0;
-                padding-left: 10px;
-                margin: 5px 15px 5px 0;
-                font-weight: 600;
-                line-height: 30px;
-            }
-
-            #wp_divider { order: -10; }
-            label[for="dashboard_right_now-hide"] { order: -5; }
-            label[for="dashboard_activity-hide"] { order: -5; }
-            label[for="dashboard_quick_press-hide"] { order: -5; }
-            label[for="dashboard_primary-hide"] { order: -5; }
-            label[for="wp_welcome_panel-hide"] { order: -5;}
-
-            #strong_testimonials_divider { order: -1; }
-        </style>
-        <?php
+	function add_style( $hook ) {
+		if ( 'index.php' == $hook ) {
+			wp_enqueue_style( 'strong-testimonials-dashboard', plugin_dir_url( __FILE__ ) . 'css/dashboard.css' );
+		}
 	}
 
 	/**
-	 * Automatically open Screen Options during testing
+	 * Reposition elements
+	 *
+	 * @param $hook
 	 */
-	function add_script() {
-	    ?>
-        <script>
-          jQuery(document).ready(function( $ ) {
-            // $('#show-settings-link').click();
-
-            $('<div id="wp_divider" class="divider">WordPress</div>').insertAfter('#adv-settings fieldset.metabox-prefs legend');
-
-            $('<div id="strong_testimonials_divider" class="divider">Strong Testimonials</div>').insertAfter('#adv-settings fieldset.metabox-prefs legend');
-
-            $('<div id="strong_testimonials_views_divider" class="divider">Strong Testimonials &bull; Views</div>').insertBefore('label[for="strongdashboard_view_1-hide"]');
-
-            $('input:checked', 'fieldset.metabox-prefs').closest('label').addClass('hilite');
-            $('input', 'fieldset.metabox-prefs').on('change', function() {
-              $(this).closest('label').toggleClass('hilite');
-            });
-          });
-        </script>
-        <?php
+	function add_script( $hook ) {
+		if ( 'index.php' == $hook ) {
+			wp_enqueue_script( 'strong-testimonials-dashboard', plugin_dir_url( __FILE__ ) . 'js/dashboard.js', array( 'jquery' ), false );
+		}
 	}
 
 	/**
@@ -363,6 +321,13 @@ class Strong_Testimonials_Dashboard {
 			$this->printer( $options );
 		} else {
 			echo $this->not_found;
+		}
+		echo '<p><b>Excluded</b></p>';
+		$options = get_option( 'wpmtst_assignment_excluded' );
+		if ( $options ) {
+			$this->printer( $options );
+		} else {
+			echo '<pre>none</pre>';
 		}
 	}
 
