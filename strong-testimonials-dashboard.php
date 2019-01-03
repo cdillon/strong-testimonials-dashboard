@@ -4,13 +4,13 @@
  * Plugin URI: https://strongplugins.com
  * Description: Add-on for the Strong Testimonials plugin.
  * Author: Chris Dillon
- * Version: 0.16
+ * Version: 0.17
  * Author URI: https://strongplugins.com
  * Text Domain: strong-testimonials-dashboard
  * Requires: 4.0 or higher
  * License: GPLv2 or later
  *
- * Copyright 2016-2018  Chris Dillon  chris@strongwp.com
+ * Copyright 2016-2019  Chris Dillon  chris@strongwp.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2, as
@@ -105,6 +105,7 @@ class Strong_Testimonials_Dashboard {
 			'the_templates'             => 'Templates',
 			'the_base_forms'            => 'Base Forms',
 			'the_custom_forms'          => 'Custom Forms',
+			'the_multiple_forms'        => 'Multiple Forms',
 			'the_properties'            => 'Properties',
 			'the_review_markup_options' => 'Review Markup Options',
 			'the_aggregate_rating'      => 'Aggregate Rating',
@@ -256,6 +257,15 @@ class Strong_Testimonials_Dashboard {
 		$custom_forms = get_option( 'wpmtst_custom_forms' );
 		if ( $custom_forms ) {
 			$this->printer( $custom_forms );
+		} else {
+			echo $this->not_found;
+		}
+	}
+
+	function the_multiple_forms() {
+		$forms = get_option( 'wpmtst_multiple_forms' );
+		if ( $forms ) {
+			$this->printer( $forms );
 		} else {
 			echo $this->not_found;
 		}
